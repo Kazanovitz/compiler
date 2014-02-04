@@ -44,8 +44,7 @@
 			 You need to put the productions for the grammar for the language for
 			 this project here */
 			 
-Start		: Classes  //{ printf("parsed Class.\n"); /*Your c code goes here!!!*/ }
-			//|
+Start		: Classes  //{ printf("parsed Class.\n"); 
     	    ;                
         
 Classes		: Classes Class
@@ -58,7 +57,6 @@ Class 		: T_Cid '{'Variables Methods '}'';'
 
 Variables	: Variables Variable 
 			| 
-			//|// FIX HERE>!>!>!
 			;
 
 Variable 	: Initializers ':' Type ';'
@@ -74,7 +72,6 @@ Type 		: T_Type
 
 Methods		: Methods Method 	
 			| 
-		//	| FIX HERE?!>!>>!!>
 			;
 
 Method 		: T_Mid Arguments ')' ':' RType '{' Variables Statements T_return RValue ';' '}'';' 
@@ -86,24 +83,18 @@ Arguments	: Arguments ',' Parameter
 			|
 			;
 
-/*Parameters	: Parameters ',' Parameter
-			| Parameter	
-			;
-*/
+
 Parameter	: T_Vid ':' Type
-			//|
 			;
 
 
 Statements	: Statements Statement 
 			| 
-			//| FIX HERE>!>!>!>!>
 			;
 
 Statement 	: Assignment
 			| Print 
 			| If
-		//	|
 			;
 
 RValue 		: Expression
@@ -146,16 +137,13 @@ ExpressionList : ExpressionList ',' Expression
 				|
 				;
 
-/*ExpressionListP : ',' Expression ExpressionListP
+/*
+May have to use this in the future
+ExpressionListP : ',' Expression ExpressionListP
 				|
 				;
 */
-/*
-Expr    : Expr '+' Expr
-        | Expr '-' Expr
-        | 'n'       
-        | 'c'   /* { printf("found a number %s \n", yytext)} 
-        ; */
+
 
         
 %%
