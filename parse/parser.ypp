@@ -1,0 +1,170 @@
+%{
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <iostream>
+	#define YYDEBUG 1
+
+	int yylex(void);
+	void yyerror(const char *);
+	extern char *yytext;
+
+%}
+
+/* Enables verbose error messages */
+%error-verbose
+
+/* WRITE ME: put all your token definitions here */
+%token T_Int
+%token T_Cid
+%token T_Vid
+%token T_AssVid
+%token T_Mid
+%token T_return
+%token T_Print
+%token T_If
+%token T_Then
+%token T_Bool
+%token T_From
+%token T_Not
+%token T_And
+/* WRITE ME: put all your type definitions here */
+%token T_Type
+%token T_Nothing
+/* WRITE ME: put all your precedence/associativity rules here */
+%left T_And
+%right T_Not 
+%left '<' "<="
+%left '+' '-'
+%left '*' '/'
+%left '(' ')'
+%right T_Neg  
+%%
+
+/* WRITE ME: This is a simple calculator language with additions and subtractions.
+			 You need to put the productions for the grammar for the language for
+			 this project here */
+			 
+Start		: Classes  //{ printf("parsed Class.\n"); /*Your c code goes here!!!*/ }
+			//|
+    	    ;                
+        
+Classes		: Classes Class
+			| Class
+			;
+
+Class 		: T_Cid '{'Variables Methods '}'';'
+			| T_Cid T_From T_Cid '{'Variables Methods '}' ';' 
+			;	
+
+Variables	: Variables Variable 
+			| 
+			//|// FIX HERE>!>!>!
+			;
+
+Variable 	: Initializers ':' Type ';'
+			;
+
+Initializers: Initializers ',' T_Vid
+			| T_Vid
+			;
+
+Type 		: T_Type
+			| T_Cid
+			;
+
+Methods		: Methods Method 	
+			| 
+		//	| FIX HERE?!>!>>!!>
+			;
+
+Method 		: T_Mid Arguments ')' ':' RType '{' Variables Statements T_return RValue ';' '}'';' 
+			;			
+
+
+Arguments	: Arguments ',' Parameter
+			| Parameter
+			|
+			;
+
+/*Parameters	: Parameters ',' Parameter
+			| Parameter	
+			;
+*/
+Parameter	: T_Vid ':' Type
+			//|
+			;
+
+
+Statements	: Statements Statement 
+			| 
+			//| FIX HERE>!>!>!>!>
+			;
+
+Statement 	: Assignment
+			| Print 
+			| If
+		//	|
+			;
+
+RValue 		: Expression
+			|
+			;
+
+RType		: Type
+			| T_Nothing
+			;
+
+Assignment 	: T_AssVid Expression ';'
+			;
+
+Print 		: T_Print Expression ';'
+			;
+
+If			: T_If Expression T_Then Statement
+			;
+
+
+Expression	: Expression '*' Expression
+			| Expression '/' Expression
+			| Expression '+' Expression
+			| Expression '-' Expression
+			| Expression '<' Expression
+			| Expression "<=" Expression
+			| Expression T_And Expression
+			| T_Not Expression
+			| '-' Expression %prec T_Neg
+			| T_Vid '.' T_Mid ExpressionList ')' 
+			| T_Cid '.' T_Mid ExpressionList ')' 			
+			| T_Mid ExpressionList ')' 
+			| T_Vid 
+			| T_Int
+			| T_Bool 
+			; 
+
+ExpressionList : ExpressionList ',' Expression
+				| Expression
+				|
+				;
+
+/*ExpressionListP : ',' Expression ExpressionListP
+				|
+				;
+*/
+/*
+Expr    : Expr '+' Expr
+        | Expr '-' Expr
+        | 'n'       
+        | 'c'   /* { printf("found a number %s \n", yytext)} 
+        ; */
+
+        
+%%
+
+/*You shouldn't have to do anything past this*/
+
+extern int yylineno;
+
+void yyerror(const char *s) {
+	fprintf(stderr, "%s at line %d\n", s, yylineno);
+	exit(0);
+}

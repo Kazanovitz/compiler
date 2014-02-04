@@ -1,0 +1,11 @@
+I started by constructing my grammar at a very high level on paper just to get a basic understanding of how the flow was going to work out. Then i started constructing my grammar very specifically to be exactly what i would program in Bison. I used left recursion as to get rid of potential shift/reduce errors.
+
+I ran into a couple problems but i think i solved all of them, I'll list them here in case i didn't. My regex for comments, different tokens for Variable ID Class ID Method ID. Sometimes i was just returning yytext with my lexer and not an actual token and in my parser just using the actual text such as '+'. For the most part it wasn't causing me any trouble but any time it didn i ended up creating a token. I didn't make them all tokens so i'm not sure if that will cause an issue.
+
+Hopefully i used enough test cases because i haven't found any more errors in my scanner or parser.
+
+
+
+Jonathan Kassan
+Jmkassan@umail.ucsb.edu
+code buddy = Cameron Loughman
