@@ -2,10 +2,11 @@ I started by constructing my grammar at a very high level on paper just to get a
 
 I ran into a couple problems but i think i solved all of them, I'll list them here in case i didn't. My regex for comments, different tokens for Variable ID Class ID Method ID. Sometimes i was just returning yytext with my lexer and not an actual token and in my parser just using the actual text such as '+'. For the most part it wasn't causing me any trouble but any time it didn i ended up creating a token. I didn't make them all tokens so i'm not sure if that will cause an issue.
 
-Hopefully i used enough test cases because i haven't found any more errors in my scanner or parser.
+I ran several Test Cases, the grammar seems to be working for this language:
+http://cs.ucsb.edu/~cs160/language.html
 
 
 
-Jonathan Kassan
-Jmkassan@umail.ucsb.edu
-code buddy = Cameron Loughman
+Jono Kassan
+Jmkassan at umail.ucsb.edu
+Referenced code w/ Cameron Loughman
