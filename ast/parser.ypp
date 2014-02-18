@@ -1,14 +1,16 @@
 %{
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <iostream>
-	#define YYDEBUG 1
+    #include <stdio.h>
+    #include "ast.hpp"
+    #include "primitive.hpp"
+    #include "symtab.hpp"
+    #include "classhierarchy.hpp"
+    #define YYDEBUG 1
 
-	int yylex(void);
-	void yyerror(const char *);
-	extern char *yytext;
-
+    extern Program_ptr ast;
+    int yylex(void);
+    void yyerror(const char *);
 %}
+
 
 /* Enables verbose error messages */
 %error-verbose
@@ -27,9 +29,21 @@
 %token T_From
 %token T_Not
 %token T_And
-/* WRITE ME: put all your type definitions here */
 %token T_Type
 %token T_Nothing
+%token T_Integer
+%token T_Boolean
+/* WRITE ME: put all your type definitions here */
+%type <u_program> Start
+%type <u_class_list> Classes
+%type <u_class> Class 
+%type <u_declaration_list> Variables
+%type <u_declaration> Variable
+%type <u_method_list> Methods
+%type <u_variableid_list> Initializers
+%type <u_type> Type
+//%type <u_classname> T_Cid
+//%type <u_classid> 
 /* WRITE ME: put all your precedence/associativity rules here */
 %left T_And
 %right T_Not 
@@ -41,107 +55,111 @@
 %%
 
 /* WRITE ME: This is a simple calculator language with additions and subtractions.
-			 You need to put the productions for the grammar for the language for
-			 this project here */
-			 
-Start		: Classes  //{ printf("parsed Class.\n"); 
-    	    ;                
+             You need to put the productions for the grammar for the language for
+             this project here */
+             
+Start       : Classes  {$$ = new ProgramImpl($1); ast = $$;}
+            ;                 
         
-Classes		: Classes Class
-			| Class
-			;
+Classes     : Classes Class {$$ = $1; $1->push_back($2);}
+            | Class {$$ = new list<Class_ptr>; $$->push_back($1);}
+            ;
 
-Class 		: T_Cid '{'Variables Methods '}'';'
-			| T_Cid T_From T_Cid '{'Variables Methods '}' ';' 
-			;	
+Class       : T_Cid '{'Variables Methods '}'';' { $$= new ClassImpl( new ClassIDImpl(new ClassName($1.u_base_charptr)), new ClassIDImpl(NULL), $3, $4); }
+            | T_Cid T_From T_Cid '{'Variables Methods '}' ';' { $$= new ClassImpl( new ClassIDImpl(new ClassName($1.u_base_charptr)), new ClassIDImpl(new ClassName($3.u_base_charptr)), $5, $6); }
+            ;   
 
-Variables	: Variables Variable 
-			| 
-			;
+Variables   : Variables Variable {$$ = $1; $1->push_back($2);}
+            |                    {$$ = new list<Declaration_ptr>;}
+            ;
 
-Variable 	: Initializers ':' Type ';'
-			;
+Variable    : Initializers ':' Type ';' {$$ = new  DeclarationImpl($1, $3);}
+            ;
 
-Initializers: Initializers ',' T_Vid
-			| T_Vid
-			;
+Initializers: Initializers ',' T_Vid  {$$ = $1; $1->push_back(new VariableIDImpl (new SymName($3.u_base_charptr)));}
+            | T_Vid                   {$$ = new list<VariableID_ptr>; $$->push_back(new VariableIDImpl (new SymName($1.u_base_charptr)));}
+            ;
 
-Type 		: T_Type
-			| T_Cid
-			;
+Type        : T_Integer  {$$= new TInteger();}
+            | T_Boolean  {$$= new TBoolean();}
+            | T_Cid      {$$= new TObject($1.u_classid)}
+            ;
 
-Methods		: Methods Method 	
-			| 
-			;
+Methods     : Methods Method    {$$ = NULL;}
+            | 
+            ;
 
-Method 		: T_Mid Arguments ')' ':' RType '{' Variables Statements T_return RValue ';' '}'';' 
-			;			
+Method      : T_Mid Arguments ')' ':' RType '{' MethodBody '}'';' 
+            ;           
 
-
-Arguments	: Arguments ',' Parameter
-			| Parameter
-			|
-			;
+MethodBody  : Variables Statements T_return RValue ';'
+            ;
 
 
-Parameter	: T_Vid ':' Type
-			;
+Arguments   : Arguments ',' Parameter
+            | Parameter
+            |
+            ;
 
 
-Statements	: Statements Statement 
-			| 
-			;
-
-Statement 	: Assignment
-			| Print 
-			| If
-			;
-
-RValue 		: Expression
-			|
-			;
-
-RType		: Type
-			| T_Nothing
-			;
-
-Assignment 	: T_AssVid Expression ';'
-			;
-
-Print 		: T_Print Expression ';'
-			;
-
-If			: T_If Expression T_Then Statement
-			;
+Parameter   : T_Vid ':' Type
+            ;
 
 
-Expression	: Expression '*' Expression
-			| Expression '/' Expression
-			| Expression '+' Expression
-			| Expression '-' Expression
-			| Expression '<' Expression
-			| Expression "<=" Expression
-			| Expression T_And Expression
-			| T_Not Expression
-			| '-' Expression %prec T_Neg
-			| T_Vid '.' T_Mid ExpressionList ')' 
-			| T_Cid '.' T_Mid ExpressionList ')' 			
-			| T_Mid ExpressionList ')' 
-			| T_Vid 
-			| T_Int
-			| T_Bool 
-			; 
+Statements  : Statements Statement 
+            | 
+            ;
+
+Statement   : Assignment
+            | Print 
+            | If
+            ;
+
+RValue      : Expression
+            |
+            ;
+
+RType       : Type
+            | T_Nothing
+            ;
+
+Assignment  : T_AssVid Expression ';'
+            ;
+
+Print       : T_Print Expression ';'
+            ;
+
+If          : T_If Expression T_Then Statement
+            ;
+
+
+Expression  : Expression '*' Expression
+            | Expression '/' Expression
+            | Expression '+' Expression
+            | Expression '-' Expression
+            | Expression '<' Expression
+            | Expression "<=" Expression
+            | Expression T_And Expression
+            | T_Not Expression
+            | '-' Expression %prec T_Neg
+            | T_Vid '.' T_Mid ExpressionList ')' 
+            | T_Cid '.' T_Mid ExpressionList ')'            
+            | T_Mid ExpressionList ')' 
+            | T_Vid 
+            | T_Int
+            | T_Bool 
+            ; 
 
 ExpressionList : ExpressionList ',' Expression
-				| Expression
-				|
-				;
+                | Expression
+                |
+                ;
 
 /*
 May have to use this in the future
 ExpressionListP : ',' Expression ExpressionListP
-				|
-				;
+                |
+                ;
 */
 
 
@@ -153,6 +171,6 @@ ExpressionListP : ',' Expression ExpressionListP
 extern int yylineno;
 
 void yyerror(const char *s) {
-	fprintf(stderr, "%s at line %d\n", s, yylineno);
-	exit(0);
+    fprintf(stderr, "%s at line %d\n", s, yylineno);
+    exit(0);
 }

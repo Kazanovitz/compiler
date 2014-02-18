@@ -1,0 +1,3 @@
+Added -4.7 to g++ in the MAKEFILE because it wouldn't make properly since it's using std:c++11
+
+Deleted semi colon line 25 on ast2dot

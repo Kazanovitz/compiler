@@ -5,7 +5,7 @@
 YACC    = bison -d -v
 LEX     = flex
 CC      = gcc
-CPP     = g++-4.7 -std=c++11 -g
+CPP     = g++-4.7 -std=c++11 -g 
 ASTBUILD = ./astbuilder.gawk
 
 TARGET	= lang

@@ -4,6 +4,10 @@
 %{
 #include <stdlib.h>
 #include <string.h>
+#include "ast.hpp"
+#include "primitive.hpp"
+#include "symtab.hpp"
+#include "classhierarchy.hpp"
 #include "parser.hpp"
 
 void yyerror(const char *);
@@ -60,23 +64,25 @@ Rtype
 %%
 
 {symbols}               { return *yytext; }
-(<=)                    { return *yytext; }          
+(<=)                    { yylval.u_base_charptr = strdup(yytext); return *yytext; }          
 (return)                { return T_return;}
-(true)|(false)          { return T_Bool;}
-{type}                  { return T_Type;}
-(not)                   { return T_Not;}
-(from)                  { return T_From;}
-(Nothing)               { return T_Nothing;}
-(and)                   { return T_And;}
-(print)                 { return T_Print;}
-(then)                  { return T_Then;}
-(if)                    { return T_If;}
-{integer}               { return T_Int;}
+(true)|(false)          { yylval.u_base_charptr = strdup(yytext); return T_Bool;}
+(Bool)                  { yylval.u_base_charptr = strdup(yytext); return T_Boolean;}
+(Int)                  { yylval.u_base_charptr = strdup(yytext); return T_Integer;}
+
+(not)                   { yylval.u_base_charptr = strdup(yytext); return T_Not;}
+(from)                  { yylval.u_base_charptr = strdup(yytext); return T_From;}
+(Nothing)               { yylval.u_base_charptr = strdup(yytext); return T_Nothing;}
+(and)                   { yylval.u_base_charptr = strdup(yytext); return T_And;}
+(print)                 { yylval.u_base_charptr = strdup(yytext); return T_Print;}
+(then)                  { yylval.u_base_charptr = strdup(yytext); return T_Then;}
+(if)                    { yylval.u_base_charptr = strdup(yytext); return T_If;}
+{integer}               { yylval.u_base_int = atoi(yytext); return T_Int;}
 {comment}               ;
-{Videntifier}           { return T_Vid;}
-{Assignment}            { return T_AssVid;}
-{Cidentifier}           { return T_Cid;}
-{Midentifier}           { return T_Mid;}
+{Videntifier}           { yylval.u_base_charptr = strdup(yytext); return T_Vid;}
+{Assignment}            { yylval.u_base_charptr = strdup(yytext); return T_AssVid;}
+{Cidentifier}           { yylval.u_base_charptr = strdup(yytext); return T_Cid;}
+{Midentifier}           { yylval.u_base_charptr = strdup(yytext); return T_Mid;}
 
 [ \t\n]        ; /* skip whitespace */
 

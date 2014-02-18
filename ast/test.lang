@@ -1,0 +1,14 @@
+Counter from SuperClass
+{
+ increment:Int;
+ first:Bool;
+ poopy:Int;
+ 
+ nextVal():Int
+ {
+
+ next:Int;
+ next = next + increment;
+ return next;
+ };
+};
