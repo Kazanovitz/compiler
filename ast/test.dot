@@ -6,35 +6,95 @@ digraph G { page="8.5,11"; size="7.5, 10";
 "2" -> "3"
 "3" [label="ClassIDImpl"]
 "3" -> "4"
-"4" [label="ClassName\n\"Counter\""]
+"4" [label="ClassName\n\"Program\""]
 "2" -> "5"
 "5" [label="ClassIDImpl"]
 "5" -> "6"
-"6" [label="ClassName\n\"SuperClass\""]
+"6" [label="NULL",fillcolor=red]
 "2" -> "7"
-"7" [label="DeclarationImpl"]
+"7" [label="MethodImpl"]
 "7" -> "8"
-"8" [label="VariableIDImpl"]
+"8" [label="MethodIDImpl"]
 "8" -> "9"
-"9" [label="SymName\n\"increment\""]
+"9" [label="SymName\n\"start(\""]
 "7" -> "10"
-"10" [label="TInteger"]
-"2" -> "11"
-"11" [label="DeclarationImpl"]
+"10" [label="ParameterImpl"]
+"10" -> "11"
+"11" [label="VariableIDImpl"]
 "11" -> "12"
-"12" [label="VariableIDImpl"]
-"12" -> "13"
-"13" [label="SymName\n\"first\""]
-"11" -> "14"
-"14" [label="TBoolean"]
-"2" -> "15"
-"15" [label="DeclarationImpl"]
+"12" [label="SymName\n\"param1\""]
+"10" -> "13"
+"13" [label="TBoolean"]
+"7" -> "14"
+"14" [label="ParameterImpl"]
+"14" -> "15"
+"15" [label="VariableIDImpl"]
 "15" -> "16"
-"16" [label="VariableIDImpl"]
-"16" -> "17"
-"17" [label="SymName\n\"poopy\""]
-"15" -> "18"
-"18" [label="TInteger"]
-"2" -> "19"
-"19" [label="NULL",fillcolor=red]
+"16" [label="SymName\n\"param2\""]
+"14" -> "17"
+"17" [label="TInteger"]
+"7" -> "18"
+"18" [label="TNothing"]
+"7" -> "19"
+"19" [label="MethodBodyImpl"]
+"19" -> "20"
+"20" [label="DeclarationImpl"]
+"20" -> "21"
+"21" [label="VariableIDImpl"]
+"21" -> "22"
+"22" [label="SymName\n\"success\""]
+"20" -> "23"
+"23" [label="TBoolean"]
+"19" -> "24"
+"24" [label="DeclarationImpl"]
+"24" -> "25"
+"25" [label="VariableIDImpl"]
+"25" -> "26"
+"26" [label="SymName\n\"f\""]
+"24" -> "27"
+"27" [label="TObject"]
+"27" -> "28"
+"28" [label="ClassIDImpl"]
+"28" -> "29"
+"29" [label="ClassName\n\"OnceResetingFibGenerator\""]
+"19" -> "30"
+"30" [label="DeclarationImpl"]
+"30" -> "31"
+"31" [label="VariableIDImpl"]
+"31" -> "32"
+"32" [label="SymName\n\"meth\""]
+"30" -> "33"
+"33" [label="TObject"]
+"33" -> "34"
+"34" [label="ClassIDImpl"]
+"34" -> "35"
+"35" [label="ClassName\n\"SuperMeth\""]
+"19" -> "36"
+"36" [label="Assignment"]
+"36" -> "37"
+"37" [label="VariableIDImpl"]
+"37" -> "38"
+"38" [label="SymName\n\"success =\""]
+"36" -> "39"
+"39" [label="MethodCall"]
+"39" -> "40"
+"40" [label="VariableIDImpl"]
+"40" -> "41"
+"41" [label="SymName\n\"f\""]
+"39" -> "42"
+"42" [label="MethodIDImpl"]
+"42" -> "43"
+"43" [label="SymName\n\"update(\""]
+"39" -> "44"
+"44" [label="IntegerLiteral"]
+"44" -> "45"
+"45" [label="Primitive\n1"]
+"39" -> "46"
+"46" [label="IntegerLiteral"]
+"46" -> "47"
+"47" [label="Primitive\n1"]
+"19" -> "48"
+"48" [label="ReturnImpl"]
+"48" -> "49"
+"49" [label="Nothing"]
 }; 

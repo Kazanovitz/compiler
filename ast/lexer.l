@@ -66,7 +66,9 @@ Rtype
 {symbols}               { return *yytext; }
 (<=)                    { yylval.u_base_charptr = strdup(yytext); return *yytext; }          
 (return)                { return T_return;}
-(true)|(false)          { yylval.u_base_charptr = strdup(yytext); return T_Bool;}
+(true)          		{ yylval.u_base_charptr = strdup(yytext); return T_BoolT;}
+(false)         		 { yylval.u_base_charptr = strdup(yytext); return T_BoolF;}
+
 (Bool)                  { yylval.u_base_charptr = strdup(yytext); return T_Boolean;}
 (Int)                  { yylval.u_base_charptr = strdup(yytext); return T_Integer;}
 
