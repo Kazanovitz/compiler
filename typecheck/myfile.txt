@@ -1,0 +1,47 @@
++-- Symbol Scope ---
++-------------
+
+	+-- Symbol Scope ---
+	| meth 
+	+-------------
+
+		+-- Symbol Scope ---
+		+-------------
+
+	+-- Symbol Scope ---
+	| sell 
+	| meth2 
+	| var5 
+	| var4 
+	+-------------
+
+		+-- Symbol Scope ---
+		| h 
+		+-------------
+
+		+-- Symbol Scope ---
+		| var2 
+		| flag 
+		| var1 
+		+-------------
+
+	+-- Symbol Scope ---
+	| ontstart 
+	| meth3 
+	+-------------
+
+		+-- Symbol Scope ---
+		| joo 
+		| h 
+		+-------------
+
+		+-- Symbol Scope ---
+		| h 
+		| one 
+		| g 
+		| test 
+		| stat 
+		| pam2 
+		| pam1 
+		+-------------
+

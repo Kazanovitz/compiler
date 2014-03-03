@@ -1,44 +1,59 @@
+Pag{
+	meth(): Bool{
+
+	return false;
+	};
+
+};
+Fruit
+{
+	var4 : Bool;
+	var5 : Int;
+
+	meth2(h:Int): Int{
+
+	return 0;
+	};
+
+	sell(var1:Int,var2:Int,flag:Bool) : Int
+	{
+		var1 = 512;
+		var5 = 1024;
+		print var5/var1;
+		var2 = var5/var1;
+		var2 = var5*var1;
+		var2 = var5+var1;
+		var2 = var5-var1;
+		var4 = var5 < var1;
+		var4 = var5 <= var1;
+		if not flag then var2=-12345;	
+
+		var5 = meth2(4);
+
+
+		return var2;
+	};
+};
 Program{
 	
+	meth3(h:Int, joo:Bool): Bool{
 
-	start() :  Nothing{
+	return false;
+	};
 
- 	test : Int;
-	one   : Int;
-	two  : Int;
-	three : Int;
-	four : Int;
-	five : Int;
-	six  : Int;
-	seven : Int; 
+	ontstart(pam1:Pag, pam2:Fruit) :  Bool{
+
 	stat: Bool;
-	hih : Bool;
-	l: Bool;
-	fuck:Bool;
-	tt : Bool;
-	ff : Bool;
+
+ 	test : Bool;
+	one  : Int;
+	g    : Bool;
+	h	: Fruit;
 
 
 
-	
-
-	/*stat = false;*/
-	stat = true;
-	tt = true;
-	ff = false; 
-		test = 5+4;
-
-	one = 1;
-	two = 2;
-	three = 3;
-	test = 5-5;
-	test = 5*5;
-	test = 5/5; 
-	/*stat = true and true; */
-	l = 4 <  6;
-	fuck = 4 <= 8;
-	stat = false;
-
+	one = pam2.sell(1,2);
+	stat = test;
 
 
 	return test;

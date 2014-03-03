@@ -940,7 +940,7 @@ YY_RULE_SETUP
 case 18:
 YY_RULE_SETUP
 #line 80 "lexer.l"
-{ char* h = strtok(yytext, " ");yylval.u_base_charptr = strdup(h); return T_AssVid;}
+{ char* h = strtok(yytext, " =");yylval.u_base_charptr = strdup(h); return T_AssVid;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
@@ -950,7 +950,7 @@ YY_RULE_SETUP
 case 20:
 YY_RULE_SETUP
 #line 82 "lexer.l"
-{ char* h = strtok(yytext, " ");yylval.u_base_charptr = strdup(h); return T_Mid;}
+{ char* h = strtok(yytext, " (");yylval.u_base_charptr = strdup(h); return T_Mid;}
 	YY_BREAK
 case 21:
 /* rule 21 can match eol */

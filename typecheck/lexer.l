@@ -77,9 +77,9 @@ Rtype
 {integer}               { yylval.u_base_int = atoi(yytext); return T_Int;}
 {comment}               ;
 {Videntifier}           { yylval.u_base_charptr = strdup(yytext); return T_Vid;}
-{Assignment}            { char* h = strtok(yytext, " ");yylval.u_base_charptr = strdup(h); return T_AssVid;}
+{Assignment}            { char* h = strtok(yytext, " =");yylval.u_base_charptr = strdup(h); return T_AssVid;}
 {Cidentifier}           {yylval.u_base_charptr = strdup(yytext); return T_Cid;}
-{Midentifier}           { char* h = strtok(yytext, " ");yylval.u_base_charptr = strdup(h); return T_Mid;}
+{Midentifier}           { char* h = strtok(yytext, " (");yylval.u_base_charptr = strdup(h); return T_Mid;}
 
 
 [ \t\n]                   ; /* Put your rules with attached Lexer actions here. */
