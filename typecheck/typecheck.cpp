@@ -115,16 +115,16 @@ class Typecheck : public Visitor {
       p->visit_children(this);
 
     string x = "Program";
-    char* a = &(x[0]);
+    char* a = strdup("Program");
     ClassName * cName = new ClassName(a);
      if(!m_classtable->exist(cName)){
        t_error(no_program, p->m_attribute);
      }
     ClassNode* classnode = m_classtable->lookup(cName);
-    SymScope * scope = classnode->scope;
-    string s = "start";
-    char * methodName = &(s[0]);
-    Symbol * f= scope->lookup(methodName);
+    SymScope * sync = classnode->scope;
+    char * s = strdup("start");
+    // char * methodName = (s);
+    Symbol * f= sync->lookup(s);
     if((f == NULL) || (f->methodType.returnType.baseType != 16)){
      t_error(no_start, p->m_attribute);
   }
@@ -201,17 +201,17 @@ class Typecheck : public Visitor {
           VariableIDImpl * VarIdP = dynamic_cast<VariableIDImpl*>(*it);
           char * key = strdup(VarIdP->m_symname->spelling());
           sync = m_symboltable->get_scope();
-
+          cout<<key<<endl;
           // p->m_attribute.m_type.baseType = p->m_type->m_attribute.m_type.baseType; // i think this is setting the type of the assignment node
 
           // test = m_symboltable->lookup(key);
           if(m_symboltable->exist(key))//~!~!~!~!~!~!~!~ place here
             t_error(dup_ident_name, p->m_attribute);
           else{
-            test = InScope(key);
-            if(test != NULL){
-              t_error(dup_ident_name, p->m_attribute);
-            }
+            // test = InScope(key);
+            // if(test != NULL){
+            //   t_error(dup_ident_name, p->m_attribute);
+            // }
             m_symboltable->insert(key, symp);
 
             symp->baseType = p->m_type->m_attribute.m_type.baseType;
@@ -266,7 +266,7 @@ class Typecheck : public Visitor {
 }
 //This Check the return type mismatch  
       if(p->m_type->m_attribute.m_type.baseType != RetP->m_expression->m_attribute.m_type.baseType){
-          t_error(ret_type_mismatch, p->m_attribute);
+           t_error(ret_type_mismatch, p->m_attribute);
 
       }
       m_symboltable->close_scope();
@@ -328,7 +328,7 @@ class Typecheck : public Visitor {
      ClassNode * clasp;
      char* parentName;
      bool found;
-
+     int i =0;
       symbP = m_symboltable->lookup(key);
       if(!m_symboltable->exist(key)){
         symbP = m_symboltable->lookup((const char *)"xxx");
@@ -342,13 +342,16 @@ class Typecheck : public Visitor {
            ClassNode* pNode = m_classtable->getParentOf(classGreat);
            Cname = strdup(pNode->name->spelling());
            std::string pName(pNode->name->spelling());
-           cout<<"TEST"<<pName<<endl;
+           cout<<"TEST "<<pName<<endl;
             if(pName == "TopClass"){
               return NULL;
             }
+            if(i ==5)
+              exit(1);
             sync = pNode->scope;
             found = sync->exist(key);
             symbP = sync->lookup(key);
+            i++;
           }
         }
       
@@ -436,6 +439,8 @@ class Typecheck : public Visitor {
     }
     
     void visitTNothing(TNothing *p) {
+      p->m_attribute.m_type.baseType = bt_nothing;
+
       p->visit_children(this);
       //WRITE ME
     }
@@ -617,6 +622,7 @@ class Typecheck : public Visitor {
       Basetype bargs;
       char * key = strdup(MethIdP->m_symname->spelling());
       symp = InScope(key);
+      cout<<"After scope"<<endl;
       std::vector<CompoundType> args;
       if(symp == NULL){
         t_error(no_class_method,p->m_attribute);
@@ -675,6 +681,9 @@ class Typecheck : public Visitor {
     }
     
     void visitNothing(Nothing *p) {
+            p->m_attribute.m_type.baseType = bt_nothing;
+            p->m_attribute.m_type.methodType.returnType.baseType = bt_nothing;
+
       p->visit_children(this);
       //WRITE ME
     }

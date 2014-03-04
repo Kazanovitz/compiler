@@ -28,7 +28,7 @@
 		+-------------
 
 	+-- Symbol Scope ---
-	| ontstart 
+	| start 
 	| meth3 
 	| xxx 
 	+-------------
@@ -44,7 +44,5 @@
 		| g 
 		| test 
 		| stat 
-		| pam2 
-		| pam1 
 		+-------------
 

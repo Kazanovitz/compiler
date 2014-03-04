@@ -35,13 +35,12 @@ Fruit
 	};
 };
 Program from Fruit {
-	
-	meth3(h:Int, joo:Bool): Bool{
 
-	return false;
+	meth3(h:Int, joo:Bool): Int{
+
+	return h;
 	};
-
-	ontstart(pam1:Int, pam2:Int) :  Bool{
+start() :  Nothing{
 
 	stat: Bool;
 
@@ -52,11 +51,14 @@ Program from Fruit {
 	   /*For some reason anything defined with the type object keeps that the classtype for all things in the current class */
 
 
-	one = sell(one,two,test);
+	one = sell(one,3,test);
 	stat = test;
 
 
-	return test;
+	return;
 
 	};
+	
+
+	
 };
