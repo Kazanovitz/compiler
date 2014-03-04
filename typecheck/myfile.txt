@@ -3,6 +3,7 @@
 
 	+-- Symbol Scope ---
 	| meth 
+	| xxx 
 	+-------------
 
 		+-- Symbol Scope ---
@@ -13,10 +14,11 @@
 	| meth2 
 	| var5 
 	| var4 
+	| xxx 
 	+-------------
 
 		+-- Symbol Scope ---
-		| h 
+		| number 
 		+-------------
 
 		+-- Symbol Scope ---
@@ -28,6 +30,7 @@
 	+-- Symbol Scope ---
 	| ontstart 
 	| meth3 
+	| xxx 
 	+-------------
 
 		+-- Symbol Scope ---
@@ -36,7 +39,7 @@
 		+-------------
 
 		+-- Symbol Scope ---
-		| h 
+		| two 
 		| one 
 		| g 
 		| test 

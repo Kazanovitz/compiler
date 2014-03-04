@@ -10,14 +10,14 @@ Fruit
 	var4 : Bool;
 	var5 : Int;
 
-	meth2(h:Int): Int{
+	meth2(number:Int): Int{
 
 	return 0;
 	};
 
 	sell(var1:Int,var2:Int,flag:Bool) : Int
 	{
-		var1 = 512;
+	/*	var1 = 512;
 		var5 = 1024;
 		print var5/var1;
 		var2 = var5/var1;
@@ -27,32 +27,32 @@ Fruit
 		var4 = var5 < var1;
 		var4 = var5 <= var1;
 		if not flag then var2=-12345;	
-
+*/
 		var5 = meth2(4);
 
 
-		return var2;
+		return var5;
 	};
 };
-Program{
+Program from Fruit {
 	
 	meth3(h:Int, joo:Bool): Bool{
 
 	return false;
 	};
 
-	ontstart(pam1:Pag, pam2:Fruit) :  Bool{
+	ontstart(pam1:Int, pam2:Int) :  Bool{
 
 	stat: Bool;
 
  	test : Bool;
 	one  : Int;
+	two : Int;
 	g    : Bool;
-	h	: Fruit;
+	   /*For some reason anything defined with the type object keeps that the classtype for all things in the current class */
 
 
-
-	one = pam2.sell(1,2);
+	one = sell(one,two,test);
 	stat = test;
 
 
