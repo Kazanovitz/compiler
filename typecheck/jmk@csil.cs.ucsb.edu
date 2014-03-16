@@ -1,0 +1,13 @@
+
+I emailed Keith and he said i could re-turn this is because when i went to office hours with tianjiu he pointed out that my error was that i hadn't seen keiths post about the super class edit for the classheiarchy constructor.
+
+
+
+To implement Inheritance in the class implementation node i insert a symbol named "xxx" i give this symbol the classID of it's current class, this way anytime i am in the class i can lookup xxx in the symbol table retrieve the class id and then get parent of it to check the parent classes, it was working a lot better before, i need to work more and see what i changed to make sure it works better.
+
+What I wasn't able to do
+
+Implement recurision
+
+my Name: Jonathan Kassan
+code buddy: Cameron Loughman

@@ -64,7 +64,7 @@ Rtype
 %%
 
 {symbols}               { return *yytext; }
-(<=)                    { yylval.u_base_charptr = strdup(yytext); return *yytext; }          
+(<=)                    { yylval.u_base_charptr = strdup(yytext); return T_Loet; }          
 (return)                { return T_return;}
 (true)          		{ yylval.u_base_charptr = strdup(yytext); return T_BoolT;}
 (false)         		 { yylval.u_base_charptr = strdup(yytext); return T_BoolF;}

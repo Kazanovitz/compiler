@@ -1,0 +1,17 @@
+Program 
+{
+	var4,var7,var8 : Bool;
+	var5 : Int;
+
+	start() : Nothing
+	{
+		var1 : Int;
+		var2 : Int;
+		var4 : Program;
+		var1 = 512;
+		var5 = 1024;
+		print var5/var1;
+		var5 = end(var1,var,true);	
+		return;
+	};
+};

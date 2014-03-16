@@ -93,7 +93,7 @@ class Typecheck : public Visitor {
     }
     
     public:
-    
+    bool progger = false;
     Typecheck(FILE* errorfile, SymTab* symboltable) {
         m_errorfile = errorfile;
         m_symboltable = symboltable;
@@ -137,25 +137,29 @@ class Typecheck : public Visitor {
     }
     
     void visitClassImpl(ClassImpl *p) {
+      int stop;
       m_symboltable->open_scope();
       Symbol * symPtr = new Symbol;
 
       // = new ClassNode;
       Symbol * symp;// = new Symbol;
 
-      //  typename std::list<Method_ptr>::iterator it = p->m_method_list->begin();
-      //  for( ; it != p->m_method_list->end(); ++it) {
-      //     MethodImpl * MethImp = dynamic_cast<MethodImpl *> (*it);
-      //     MethodBodyImpl * MethBod = dynamic_cast<MethodBodyImpl*>(MethImp->m_methodbody);
-      //     MethBod->m_attribute.m_type.classType.classID = key1;
-         
-      //   }
       ClassIDImpl * ClassIdP = dynamic_cast<ClassIDImpl*>(p->m_classid_1);
       ClassIDImpl * ClassIdP2 = dynamic_cast<ClassIDImpl*>(p->m_classid_2);
       char * key1 = strdup(ClassIdP->m_classname->spelling());
       symPtr->classType.classID = ClassIdP->m_classname->spelling();
-
+      char * progFinder = strdup("Program");
       ClassName * nm = new ClassName(key1);
+
+      if(progger == true){
+        t_error(no_program, p->m_attribute);
+      }
+
+      if(std::string(key1) == std::string(progFinder)){
+        progger = true;
+      }
+
+
       //char * key2 = strdup(ClassIdP2->m_classname->spelling());
 
       if(m_classtable->exist(key1)){
@@ -165,15 +169,15 @@ class Typecheck : public Visitor {
          if(ClassIdP2->m_classname != NULL){
             char * key2 = strdup(ClassIdP2->m_classname->spelling());
             ClassName * nm2 = new ClassName(key2);
-           cout<<"inserted class: " <<key1 <<" from :"<<key2 <<endl;
+           // cout<<"inserted class: " <<key1 <<" from :"<<key2 <<endl;
             m_classtable->insert(nm, nm2, p,  m_symboltable->get_scope());
             ClassNode * clasp = m_classtable->getParentOf(key2);
-            cout<<"Class: " <<key1 <<", Super class:  "<<clasp->name->spelling()<<endl;
+            // cout<<"Class: " <<key1 <<", Super class:  "<<clasp->name->spelling()<<endl;
 
          }
         else{  
-        cout<< "instered this in class table: "<< key1<<endl;
-        m_classtable->insert(key1,NULL, p,  m_symboltable->get_scope());
+         // cout<< "instered this in class table: "<< key1 <<endl;
+        m_classtable->insert(nm, NULL, p,  m_symboltable->get_scope());
         }
       }
      m_symboltable->insert((char *)"xxx", symPtr);
@@ -201,17 +205,17 @@ class Typecheck : public Visitor {
           VariableIDImpl * VarIdP = dynamic_cast<VariableIDImpl*>(*it);
           char * key = strdup(VarIdP->m_symname->spelling());
           sync = m_symboltable->get_scope();
-          cout<<key<<endl;
+          // cout<<key<<endl;
           // p->m_attribute.m_type.baseType = p->m_type->m_attribute.m_type.baseType; // i think this is setting the type of the assignment node
 
           // test = m_symboltable->lookup(key);
           if(m_symboltable->exist(key))//~!~!~!~!~!~!~!~ place here
             t_error(dup_ident_name, p->m_attribute);
           else{
-            // test = InScope(key);
-            // if(test != NULL){
-            //   t_error(dup_ident_name, p->m_attribute);
-            // }
+            test = InScope(key);
+            if(test != NULL){
+              t_error(dup_ident_name, p->m_attribute);
+            }
             m_symboltable->insert(key, symp);
 
             symp->baseType = p->m_type->m_attribute.m_type.baseType;
@@ -231,83 +235,76 @@ class Typecheck : public Visitor {
     
     void visitMethodImpl(MethodImpl *p) {
      m_symboltable->open_scope();
-      p->visit_children(this);
-      Symbol *symp = new Symbol;
+
+      if (p->m_type != NULL) {
+        p->m_type->accept( this );
+      } else {
+        this->visitNullPointer();
+      }
+   //  cout<<"my type: "<<p->m_type->m_attribute.m_type.baseType<<endl;
+
+
+    Symbol *symp = new Symbol;
       Symbol *Msymp = new Symbol;
+      Symbol *test;
       MethodIDImpl * MethIdP = dynamic_cast<MethodIDImpl*>(p->m_methodid);
 
       p->m_attribute.m_type.baseType = p->m_type->m_attribute.m_type.baseType;
 //this is dealing with duplicate method names
       char * key = strdup(MethIdP->m_symname->spelling());//~!~!~!~!~!~!~!~ place here
-          if(m_symboltable->exist(key))//change this make Msymp = my function
+         test = InScope(key);
+          if(test != NULL){//change this make Msymp = my function
             t_error(dup_ident_name, p->m_attribute);
-          else{
-            Msymp->methodType.returnType.baseType = p->m_type->m_attribute.m_type.baseType;
-            Msymp->baseType = p->m_type->m_attribute.m_type.baseType;
-            //cout<< "meth; key: "<< key <<" type : "<< Msymp->methodType.returnType.baseType<<endl;
-            m_symboltable->insert_in_parent_scope(key, Msymp);
           }
+          else{
+                  CompoundType arg;
 
-      CompoundType arg;
-      MethodBodyImpl * MethBodP = dynamic_cast<MethodBodyImpl*>(p->m_methodbody);
-      ReturnImpl * RetP = dynamic_cast<ReturnImpl*>(MethBodP->m_return);
+            p->visit_children(this);
 
 //Adding parameters to sym table and each argument to method vector
        typename std::list<Parameter_ptr>::iterator it = p->m_parameter_list->begin();
        for( ; it != p->m_parameter_list->end(); ++it) {
           ParameterImpl * Pimp = dynamic_cast<ParameterImpl *> (*it);
           VariableIDImpl * VarIdP = dynamic_cast<VariableIDImpl*>(Pimp->m_variableid);
-          char * key = strdup(VarIdP->m_symname->spelling());
+          //char * key = strdup(VarIdP->m_symname->spelling());
 
             arg.baseType = Pimp->m_type->m_attribute.m_type.baseType;
             Msymp->methodType.argsType.push_back(arg);
-      
+          }
 
-}
-//This Check the return type mismatch  
-      if(p->m_type->m_attribute.m_type.baseType != RetP->m_expression->m_attribute.m_type.baseType){
+            Msymp->methodType.returnType.baseType = p->m_type->m_attribute.m_type.baseType;
+            Msymp->baseType = p->m_type->m_attribute.m_type.baseType;
+            m_symboltable->insert_in_parent_scope(key, Msymp);
+          }
+
+      if(p->m_type->m_attribute.m_type.baseType != p->m_methodbody->m_attribute.m_type.baseType){
            t_error(ret_type_mismatch, p->m_attribute);
-
-      }
+        }
+      
       m_symboltable->close_scope();
-
-
       //WRITE ME
     }
     
     void visitMethodBodyImpl(MethodBodyImpl *p) {
-      //cout<<"my class type: "<<p->m_attribute.m_type.classType.classID<<endl;
       p->visit_children(this);
-
-      // typename std::list<Declaration_ptr>::iterator iter = p->m_declaration_list->begin();
-      // cout<<"before looop"<<endl;
-      // for( ; iter != p->m_declaration_list->end(); ++iter) {
-      //  cout<<"in loop"<<endl;
-      //  DeclarationImpl * DecImp = dynamic_cast<DeclarationImpl *> (*iter);
-      //  DecImp->m_attribute.m_type.classType.classID = p->m_attribute.m_type.classType.classID;
-             
-      // }
-
-
-
-
-
-
+      ReturnImpl * RetP = dynamic_cast<ReturnImpl*>(p->m_return);
+    //This is for when the return type mismatch  
+      p->m_attribute.m_type.baseType = RetP->m_expression->m_attribute.m_type.baseType;
       //WRITE ME
     }
     
     void visitParameterImpl(ParameterImpl *p) {
       p->visit_children(this);
       Symbol *symp = new Symbol;
-
-
-
+      Symbol * test;
 
       VariableIDImpl * VarIdP = dynamic_cast<VariableIDImpl*>(p->m_variableid);
 
       char * key = strdup(VarIdP->m_symname->spelling());
-        if(m_symboltable->exist(key))
+      test = InScope(key);
+        if(test!=NULL){
             t_error(dup_ident_name, p->m_attribute);
+          }
         else{
             symp->baseType = p->m_type->m_attribute.m_type.baseType;
         //    cout<< "param; key: "<< key <<" type : "<< symp->baseType<<endl;
@@ -316,6 +313,7 @@ class Typecheck : public Visitor {
         //      cout<< "this is what i'm SEETTTING key: " << symp->classType.classID<<endl;
 
             }
+            // cout<<"insertingthis var from param: "<<key <<endl;
             m_symboltable->insert(key, symp);
           }      
 
@@ -328,12 +326,15 @@ class Typecheck : public Visitor {
      ClassNode * clasp;
      char* parentName;
      bool found;
+     string pName;
      int i =0;
+     // cout<<" the key is "<<key<<endl;
       symbP = m_symboltable->lookup(key);
       if(!m_symboltable->exist(key)){
         symbP = m_symboltable->lookup((const char *)"xxx");
         char * Cname = strdup(symbP->classType.classID);
         parent = m_classtable->lookup(Cname);
+        // cout<<"parent: "<<parent->name->spelling()<<endl;
         sync = parent->scope;
         symbP = sync->lookup(key);
         found = sync->exist(key);
@@ -342,26 +343,24 @@ class Typecheck : public Visitor {
            ClassNode* pNode = m_classtable->getParentOf(classGreat);
            Cname = strdup(pNode->name->spelling());
            std::string pName(pNode->name->spelling());
-           cout<<"TEST "<<pName<<endl;
-            if(pName == "TopClass"){
+            // cout<<"the parent name: "<<Cname<<endl;
+            if( pName == "TopClass"){
               return NULL;
             }
-            if(i ==5)
-              exit(1);
+
             sync = pNode->scope;
             found = sync->exist(key);
             symbP = sync->lookup(key);
             i++;
           }
         }
-      
         return symbP;
       
     }
     void visitAssignment(Assignment *p) {
-
      p->visit_children(this);
-     string str1, str2;
+
+     string str1, str2, temp1, temp2;
      Symbol * symp;
      // Symbol * symp;
      SymScope *sync;
@@ -371,35 +370,30 @@ class Typecheck : public Visitor {
       VariableIDImpl * VarIdP = dynamic_cast<VariableIDImpl*>(p->m_variableid);
       char * key = strdup(VarIdP->m_symname->spelling());
       symp = m_symboltable->lookup((const char *)"xxx");
-      char * Cname = strdup(symp->classType.classID);
-      parent = m_classtable->getParentOf(Cname);
-      parentName = strdup(parent->name->spelling());
+
 
       symp = InScope(key);
       if(symp != NULL){ // or i could change this to if symp ==NULL
         if(p->m_expression->m_attribute.m_type.baseType == 8){
           if(p->m_expression->m_attribute.m_type.baseType == 8 && symp->baseType == 8){
-
-          std::string temp1(p->m_expression->m_attribute.m_type.classType.classID);
-          std::string temp2(symp->classType.classID);
+          // std::string temp1(p->m_expression->m_attribute.m_type.classType.classID);
+          //std::string temp2(symp->classType.classID);
           if(temp1!= temp2){
             t_error(incompat_assign, p->m_attribute);
-          }
+            }
           if(p->m_expression->m_attribute.m_type.methodType.returnType.baseType != symp->baseType){
-          
             t_error(incompat_assign, p->m_attribute);
-
-          }
-       } 
+            }
+           } 
         }
         if(p->m_expression->m_attribute.m_type.baseType != 8 && p->m_expression->m_attribute.m_type.baseType != symp->baseType){
 
           t_error(incompat_assign, p->m_attribute);
-      }
-        }     
+        }
+      }     
       else{
          t_error(sym_name_undef, p->m_attribute);
-}
+        }
       //WRITE ME
     }
     
@@ -420,7 +414,6 @@ class Typecheck : public Visitor {
     
     void visitReturnImpl(ReturnImpl *p) {
       p->visit_children(this);
-     //p->m_attribute.m_type.methodType.returnType.baseType = p->m_expression->m_attribute.m_type.baseType;
       //WRITE ME
     }
     
@@ -452,9 +445,9 @@ class Typecheck : public Visitor {
       char *name = strdup(ClassIdP->m_classname->spelling());
       p->m_attribute.m_type.classType.classID = name;
       ClassNode * classptr;
-      if(!m_classtable->exist(name))
+      if(!m_classtable->exist(name)){
         t_error(sym_name_undef, p->m_attribute);
-
+}
 
       //WRITE ME
     }
@@ -567,13 +560,15 @@ class Typecheck : public Visitor {
       ClassNode * clasp;
       Basetype bargs;
       int i =0;
-     // SymScope * sync;
+      Symbol * test;
+
       VariableIDImpl * VarIdP = dynamic_cast<VariableIDImpl*>(p->m_variableid);
       MethodIDImpl * MethIdP = dynamic_cast<MethodIDImpl*>(p->m_methodid);
       char * meth = strdup(MethIdP->m_symname->spelling());
+      test = m_symboltable->lookup(meth);
      // Basetype bargs;
       char * var = strdup(VarIdP->m_symname->spelling());
-      cout<<"the var : "<<var<<endl;
+      // cout<<"the var : "<<var<<endl;
 
       if( !m_symboltable->exist(var)){//if symbol not defined within class
               t_error(sym_name_undef, p->m_attribute);
@@ -584,14 +579,20 @@ class Typecheck : public Visitor {
         }
         char *name = strdup(symp->classType.classID);
           clasp = m_classtable->lookup(name);
-          cout<<name<<endl;
+          // cout<<name<<endl;
           if(!m_classtable->exist(name)){
+
             t_error(sym_name_undef,p->m_attribute);
           }
-          SymScope *sync = clasp->scope;
+         // SymScope *sync = clasp->scope;
 
-          symp = InScope(meth);//~!~!~!~!~!~!~!~ place here
-          if(sync->lookup(meth) == NULL){
+         char * className= strdup(symp->classType.classID);
+         ClassNode* classnode = m_classtable->lookup(className);
+         SymScope * sync = classnode->scope;
+         symp= sync->lookup(meth);
+          //symp = InScope(meth);//~!~!~!~!~!~!~!~ place here
+
+          if(symp == NULL){
             t_error(no_class_method, p->m_attribute);
           }
         if(p->m_expression_list->size()!= symp->methodType.argsType.size() )
@@ -622,24 +623,23 @@ class Typecheck : public Visitor {
       Basetype bargs;
       char * key = strdup(MethIdP->m_symname->spelling());
       symp = InScope(key);
-      cout<<"After scope"<<endl;
+       // cout<<"After scope "<<key<<endl;
       std::vector<CompoundType> args;
       if(symp == NULL){
+
         t_error(no_class_method,p->m_attribute);
       }
-      args = symp->methodType.argsType;
-
+      // cout<< "the key is: "<<key<<endl;
 
       int i = 0;
-      if(args.size() != p->m_expression_list->size()){
+      if((p->m_expression_list->size()) != symp->methodType.argsType.size()) {
+
           t_error(call_narg_mismatch, p->m_attribute);
 }
 
       typename std::list<Expression_ptr>::iterator it = p->m_expression_list->begin();
        for( ; it != p->m_expression_list->end(); ++it) {
         Expression * Expoin = dynamic_cast<Expression *> (*it);
-        //ParameterImpl * Pimp = p->m_expression_list->front();
-       // Expression * lop = p->m_expression_list->front();
          bargs = symp->methodType.argsType[i].baseType;
          if(bargs != Expoin->m_attribute.m_type.baseType)
             t_error(call_args_mismatch, p->m_attribute);
@@ -648,7 +648,6 @@ class Typecheck : public Visitor {
 
 
       p->m_attribute.m_type.baseType = symp->baseType;
-
       //WRITE ME
     }
     
@@ -658,10 +657,13 @@ class Typecheck : public Visitor {
     VariableIDImpl * VarIdP = dynamic_cast<VariableIDImpl*>(p->m_variableid);
     char * key = strdup(VarIdP->m_symname->spelling());
 
-    symp = m_symboltable->lookup(key);
+    symp = InScope(key);
+if(symp == NULL){
 
+  t_error(sym_name_undef, p->m_attribute);
+  }
+      p->m_attribute.m_type.baseType = symp->baseType;
 
-    p->m_attribute.m_type.baseType = symp -> baseType;
     if(symp->baseType == 8)
       p->m_attribute.m_type.classType.classID = symp->classType.classID;
 
@@ -689,14 +691,7 @@ class Typecheck : public Visitor {
     }
     
     void visitSymName(SymName *p) {
-    //  cout<<"declaration bottom TYPE: "<<p->m_parent_attribute->m_type.baseType<<endl;
-
-      // if(m_symboltable->exist(p->spelling())){
-      //     cout<<"figure out how to access teh attribute for this duplicate name error: "<<p->spelling()<<endl;
-      //   }
-      // else{
-      //   m_symboltable->insert(p->spelling(),symp);
-      // }
+    
       //WRITE ME
     }
     

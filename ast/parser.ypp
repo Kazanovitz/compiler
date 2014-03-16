@@ -31,6 +31,7 @@
 %token T_Not
 %token T_And
 %token T_Type
+%token T_Loet
 %token T_Nothing
 %token T_Integer
 %token T_Boolean
@@ -59,7 +60,7 @@
 /* WRITE ME: put all your precedence/associativity rules here */
 %left T_And
 %right T_Not 
-%left '<' "<="
+%left '<' T_Loet
 %left '+' '-'
 %left '*' '/'
 %left '(' ')'
@@ -150,7 +151,7 @@ Expression  : Expression '*' Expression {$$= new Times($1, $3); }
             | Expression '+' Expression {$$= new Plus($1, $3); }
             | Expression '-' Expression {$$= new Minus($1, $3); }
             | Expression '<' Expression {$$= new LessThan($1, $3); }
-            | Expression "<=" Expression {$$= new LessThanEqualTo($1, $3); }
+            | Expression T_Loet Expression {$$= new LessThanEqualTo($1, $3); }
             | Expression T_And Expression {$$= new And($1, $3); }
             | T_Not Expression              {$$ = new Not($2);}
             | '-' Expression %prec T_Neg     {$$ = new UnaryMinus($2);}

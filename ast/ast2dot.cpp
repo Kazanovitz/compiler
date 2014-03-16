@@ -22,7 +22,7 @@ class Ast2dot : public Visitor {
  }
 
  void finish() { 
-	fprintf( m_out, "}; \n" );	
+	fprintf( m_out, "} \n" );	
  }
 
  void add_edge( int p, int c )

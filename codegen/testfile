@@ -1,0 +1,17 @@
+Program 
+{
+    mult(): Int{
+        b:Bool;
+        a:Int;
+        a = 100;
+        b = true and true;
+        if b then a = 5;
+        return a;
+};
+
+
+    start() : Nothing
+    {
+        return ;
+    };
+};

@@ -48,15 +48,17 @@
      T_Print = 264,
      T_If = 265,
      T_Then = 266,
-     T_Bool = 267,
-     T_From = 268,
-     T_Not = 269,
-     T_And = 270,
-     T_Type = 271,
-     T_Nothing = 272,
-     T_Integer = 273,
-     T_Boolean = 274,
-     T_Neg = 276
+     T_BoolT = 267,
+     T_BoolF = 268,
+     T_From = 269,
+     T_Not = 270,
+     T_And = 271,
+     T_Type = 272,
+     T_Loet = 273,
+     T_Nothing = 274,
+     T_Integer = 275,
+     T_Boolean = 276,
+     T_Neg = 277
    };
 #endif
 /* Tokens.  */
@@ -69,15 +71,17 @@
 #define T_Print 264
 #define T_If 265
 #define T_Then 266
-#define T_Bool 267
-#define T_From 268
-#define T_Not 269
-#define T_And 270
-#define T_Type 271
-#define T_Nothing 272
-#define T_Integer 273
-#define T_Boolean 274
-#define T_Neg 276
+#define T_BoolT 267
+#define T_BoolF 268
+#define T_From 269
+#define T_Not 270
+#define T_And 271
+#define T_Type 272
+#define T_Loet 273
+#define T_Nothing 274
+#define T_Integer 275
+#define T_Boolean 276
+#define T_Neg 277
 
 
 

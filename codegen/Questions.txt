@@ -1,0 +1,46 @@
+Questions
+
+Do you need to visit the children for the literals?
+
+beginning of method use call method moving from pre-call to prolog
+
+method-call does call and that jumps to the startof the method "the label" and it pushes the returna ddress on the stack
+
+once you deallocate local variable space use ret which automatically pops the next item on the stack aka it'll return to where you callled
+
+mov the stack pointer to the base pointer in the local variable space
+
+
+at the beginning of method move 
+
+push the old base pointer
+move the stack to base pointer
+
+do alll method stufff
+also somewhere in here deal with the offset table
+local variable cop
+
+then at the end use
+leave at the end of the method--> moves base into stack 
+
+at some point before we return put the return value in EAX
+call ret
+
+
+
+
+then caller method needs to mremove parameters from stack
+return address of caller method there is a contract between caller and callee callee will leave return in EAX so get it out of EAX
+
+probably want to do is then push eax after you remove paramters 
+
+label for inherited is superclass_class
+
+provided start method
+
+program size is the amount of size they give us for the heap in total
+
+
+local variables of method live in activation record only, size of class is porperities of class and all of it's super class
+
+when you visit nothing- push 0

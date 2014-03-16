@@ -1,17 +1,10 @@
-Program 
+Program
 {
-    start(param1:Bool, param2:Int) : Nothing
-    {
-        success : Bool;
-        f : OnceResetingFibGenerator;
-        meth : SuperMeth;
-        success = f.update(1, 1);
-        /*boob = 1+1;
-        butt = 1-1;
-        cunt = 1*1;
-        vagina = 1/1;
-        anus = -1;
-        cock = meth.addition(3+2-3+4/5);*/
-        return; 
-    };
-};
+     start() : Nothing
+     {
+             var1 : Int;
+             var1 = 512;
+             print var1*var2+var3;
+             return;
+     };
+ };

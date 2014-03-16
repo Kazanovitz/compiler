@@ -74,8 +74,11 @@ Methods		: Methods Method
 			| 
 			;
 
-Method 		: T_Mid Arguments ')' ':' RType '{' Variables Statements T_return RValue ';' '}'';' 
+Method 		: T_Mid Arguments ')' ':' RType '{' MethodBody '}'';' 
 			;			
+
+MethodBody	: Variables Statements T_return RValue ';'
+			;
 
 
 Arguments	: Arguments ',' Parameter

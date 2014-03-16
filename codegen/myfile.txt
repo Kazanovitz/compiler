@@ -1,0 +1,23 @@
++-- Symbol Scope ---
+| xxx 
++-------------
+
+	+-- Symbol Scope ---
+	| start 
+	| mult 
+	| xxx 
+	+-------------
+
+		+-- Symbol Scope ---
+		| ans 
+		| three 
+		| two 
+		| one 
+		+-------------
+
+		+-- Symbol Scope ---
+		| bowl 
+		| var2 
+		| var1 
+		+-------------
+

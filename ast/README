@@ -1,3 +1,11 @@
-Added -4.7 to g++ in the MAKEFILE because it wouldn't make properly since it's using std:c++11
+Author: Jonathan Kassan
+Code Bud: Cameron Loughman
 
-Deleted semi colon line 25 on ast2dot
+I was working on my home machine and i had to upgrade my gcc because the program wouldn't build properly, then i added -4.7 to the makefile, once i moved my code over to csil i had to remove that flag.
+
+Building the list was teh hardest thing for me i had never used the push_back method ($1->push_back($2) with c before so it took my quite a while to figure that out, after that i think it was pretty straight forward.
+
+Once i transfered my work to CSIL i got errors with $1.u_base_charptr it was angry that i hadn't declared it a type at the top, I am unsure why my computer did not care about this and csil did. Similiarly my computer cares about the ending colon created by the dot ast2dot file and csil does not i make look into this in the future.
+
+I think i did everything correctly to build the AST
+

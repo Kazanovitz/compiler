@@ -1,37 +1,28 @@
-Program{
-	
-
-	start() :  Nothing{
-
-	stat: Bool;
-	T:Bool;
-	F:Bool;
-	test : Int;
-	one   : Int;
-	two  : Int;
-	three : Int;
-	four : Int;
-	five : Int;
-	six  : Int;
-	seven : Int;
-
-	stat = false;
-	T = true;
-	F = false;
-	one = 1;
-	two = 2;
-	three = 3;
-	test = 5+4;
-	test = 5-5;
-	test = 5*5;
-	test = 5/5;
-	stat = T and F;
-	stat = test <  one;
-	stat = test <= two;
-
-
-
-	return;
-
-	};
+A
+{
+     start1() : Nothing
+     {
+             a,b,c:Int;
+             return;
+     };
 };
+ B from A
+ {
+     start2() : Nothing
+     {
+             a,b,c:Int;
+             return;
+     };
+ };
+ Program
+ {
+     start() : Nothing
+     {
+             a:A;
+             b:B;
+             c:Program;
+             a=b;
+             a=c;
+             return;
+     };
+ };

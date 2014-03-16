@@ -2,47 +2,12 @@
 +-------------
 
 	+-- Symbol Scope ---
-	| meth 
+	| start 
 	| xxx 
 	+-------------
-
-		+-- Symbol Scope ---
-		+-------------
-
-	+-- Symbol Scope ---
-	| sell 
-	| meth2 
-	| var5 
-	| var4 
-	| xxx 
-	+-------------
-
-		+-- Symbol Scope ---
-		| number 
-		+-------------
 
 		+-- Symbol Scope ---
 		| var2 
-		| flag 
 		| var1 
-		+-------------
-
-	+-- Symbol Scope ---
-	| start 
-	| meth3 
-	| xxx 
-	+-------------
-
-		+-- Symbol Scope ---
-		| joo 
-		| h 
-		+-------------
-
-		+-- Symbol Scope ---
-		| two 
-		| one 
-		| g 
-		| test 
-		| stat 
 		+-------------
 

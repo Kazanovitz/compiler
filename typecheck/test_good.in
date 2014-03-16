@@ -10,7 +10,7 @@ Fruit
 	var4 : Bool;
 	var5 : Int;
 
-	meth2(number:Int): Int{
+	meth2(change:Int): Int{
 
 	return 0;
 	};
@@ -36,10 +36,19 @@ Fruit
 };
 Program from Fruit {
 
-	meth3(h:Int, joo:Bool): Int{
+	boob : Fruit;
+	wrong: Pag;
+
+	meth3(h:Int): Int{
+
+		num:Int;
+
+		num = 5;
+
 
 	return h;
 	};
+
 start() :  Nothing{
 
 	stat: Bool;
@@ -51,7 +60,7 @@ start() :  Nothing{
 	   /*For some reason anything defined with the type object keeps that the classtype for all things in the current class */
 
 
-	one = sell(one,3,test);
+	one = boob.sell(4,4,false);
 	stat = test;
 
 

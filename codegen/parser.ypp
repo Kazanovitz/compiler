@@ -1,0 +1,184 @@
+%{
+    #include <stdio.h>
+    #include "ast.hpp"
+    #include "primitive.hpp"
+    #include "symtab.hpp"
+    #include "classhierarchy.hpp"
+    #define YYDEBUG 1
+    
+    extern Program_ptr ast;
+    int yylex(void);
+    void yyerror(const char *);
+%}
+
+/* Enables verbose error messages */
+%error-verbose
+
+/* WRITE ME: put all your token definitions here */
+%token T_Int
+%token T_Cid
+%token T_Vid
+%token T_AssVid
+%token T_Mid
+%token T_return
+%token T_Print
+%token T_If
+%token T_Then
+%token T_BoolT
+%token T_BoolF
+%token T_From
+%token T_Not
+%token T_And
+%token T_Type
+%token T_Nothing
+%token T_Integer
+%token T_Boolean
+%token T_Loet
+/* WRITE ME: put all your type definitions here */
+%type <u_program> Start
+%type <u_class_list> Classes
+%type <u_class> Class 
+%type <u_declaration_list> Variables
+%type <u_declaration> Variable
+%type <u_method_list> Methods
+%type <u_variableid_list> Initializers
+%type <u_type> Type RType
+%type <u_method> Method
+%type <u_methodbody> MethodBody
+%type <u_parameter_list> Arguments
+%type <u_parameter> Parameter
+%type <u_statement_list> Statements
+%type <u_statement> Statement Assignment Print If
+%type <u_return> RValue
+%type <u_expression> Expression
+%type <u_expression_list> ExpressionList
+%type <u_base_charptr> T_Cid T_AssVid T_Vid T_Mid
+%type <u_base_int> T_Int
+//%type <u_classname> T_Cid
+//%type <u_classid> 
+/* WRITE ME: put all your precedence/associativity rules here */
+%left T_And  
+%left '<' T_Loet
+%left '+' '-'
+%left '*' '/'
+%left '(' ')'
+%right T_Neg T_Not 
+%%
+
+/* WRITE ME: This is a simple calculator language with additions and subtractions.
+             You need to put the productions for the grammar for the language for
+             this project here */
+             
+Start       : Classes  {$$ = new ProgramImpl($1); ast = $$;}
+            ;                 
+        
+Classes     : Classes Class {$$ = $1; $1->push_back($2);}
+            | Class {$$ = new list<Class_ptr>; $$->push_back($1);}
+            ;
+
+Class       : T_Cid '{'Variables Methods '}'';' { $$= new ClassImpl( new ClassIDImpl(new ClassName($1)), NULL, $3, $4); }
+            | T_Cid T_From T_Cid '{'Variables Methods '}' ';' { $$= new ClassImpl( new ClassIDImpl(new ClassName($1)), new ClassIDImpl(new ClassName($3)), $5, $6); }
+            ;   
+
+Variables   : Variables Variable {$$ = $1; $1->push_back($2);}
+            |                    {$$ = new list<Declaration_ptr>;}
+            ;
+
+Variable    : Initializers ':' Type ';' {$$ = new  DeclarationImpl($1, $3);}
+            ;
+
+Initializers: Initializers ',' T_Vid  {$$ = $1; $1->push_back(new VariableIDImpl (new SymName($3)));}
+            | T_Vid                   {$$ = new list<VariableID_ptr>; $$->push_back(new VariableIDImpl (new SymName($1)));}
+            ;
+
+Type        : T_Integer  {$$= new TInteger();}
+            | T_Boolean  {$$= new TBoolean();}
+            | T_Nothing    {$$ = new TNothing();}
+            | T_Cid      {$$= new TObject(new ClassIDImpl(new ClassName($1)));}
+            ;
+
+Methods     : Methods Method    {$$ = $1; $1->push_back($2);}
+            |                   {$$ = new list<Method_ptr>;}
+            ;
+
+Method      : T_Mid Arguments ')' ':' RType '{' MethodBody '}'';' {$$= new MethodImpl(new MethodIDImpl (new SymName($1)), $2, $5, $7);}
+            ;           
+
+MethodBody  : Variables Statements T_return RValue ';' {$$ = new MethodBodyImpl($1, $2, $4);}
+            ;
+
+
+Arguments   : Arguments ',' Parameter   {$$ = $1; $1->push_back($3);}
+            | Parameter                 {$$ = new list<Parameter_ptr>; $$->push_back($1);}
+            |                           {$$ = new list<Parameter_ptr>;}
+            ;
+
+
+Parameter   : T_Vid ':' Type    {$$ = new ParameterImpl(new VariableIDImpl (new SymName($1)), $3);}
+            ;
+
+
+Statements  : Statements Statement  {$$ = $1; $1->push_back($2);}
+            |                       {$$ = new list<Statement_ptr>;}
+            ;
+
+Statement   : Assignment {$$ = $1;}
+            | Print      {$$ = $1;}
+            | If         {$$ = $1;}
+            ;
+
+RValue      : Expression {$$ = new ReturnImpl($1);}
+            |            {$$ = new ReturnImpl(new Nothing());}
+            ;
+
+RType       : Type         {$$ = $1;}
+            ;
+
+Assignment  : T_AssVid Expression ';' {$$ = new Assignment(new VariableIDImpl(new SymName($1)), $2);}
+            ;
+
+Print       : T_Print Expression ';'  {$$ = new Print($2);}
+            ;
+
+If          : T_If Expression T_Then Statement  {$$ = new If($2,$4);}
+            ;
+
+
+Expression  : Expression '*' Expression {$$= new Times($1, $3); }
+            | Expression '/' Expression {$$= new Divide($1, $3); }
+            | Expression '+' Expression {$$= new Plus($1, $3); }
+            | Expression '-' Expression {$$= new Minus($1, $3); }
+            | Expression '<' Expression {$$= new LessThan($1, $3); }
+            | Expression T_Loet Expression {$$= new LessThanEqualTo($1, $3); }
+            | Expression T_And Expression {$$= new And($1, $3); }
+            | T_Not Expression              {$$ = new Not($2);}
+            | '-' Expression %prec T_Neg     {$$ = new UnaryMinus($2);}
+            | T_Vid '.' T_Mid ExpressionList ')'  {$$ = new MethodCall(new VariableIDImpl(new SymName($1)),new MethodIDImpl (new SymName($3)),$4);}
+            | T_Cid '.' T_Mid ExpressionList ')'  {$$ = new MethodCall(new VariableIDImpl(new SymName($1)),new MethodIDImpl (new SymName($3)),$4);}          
+            | T_Mid ExpressionList ')'       {$$ = new SelfCall(new MethodIDImpl (new SymName($1)), $2 );}
+            | T_Vid         {$$ = new Variable(new VariableIDImpl(new SymName($1)));}
+            | T_Int         {$$ = new IntegerLiteral(new Primitive($1));}
+            | T_BoolT       {$$ = new BooleanLiteral(new Primitive(1));}
+            | T_BoolF       {$$ = new BooleanLiteral(new Primitive(0));}
+            ; 
+
+ExpressionList : ExpressionList ',' Expression  {$$ = $1; $1->push_back($3);}
+                | Expression                    {$$ = new list<Expression_ptr>; $$->push_back($1);}
+                |                               {$$ = new list<Expression_ptr>;}
+                ;
+
+/*
+May have to use this in the future
+ExpressionListP : ',' Expression ExpressionListP
+                |
+                ;
+*/
+
+%%
+
+extern int yylineno;
+
+void yyerror(const char *s) {
+  fprintf(stderr, "%s at line %d\n", s, yylineno);
+  exit(1);
+}

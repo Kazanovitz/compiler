@@ -1,0 +1,1342 @@
+Terminals which are not used
+
+   T_Type
+   '('
+
+
+Grammar
+
+    0 $accept: Start $end
+
+    1 Start: Classes
+
+    2 Classes: Classes Class
+    3        | Class
+
+    4 Class: T_Cid '{' Variables Methods '}' ';'
+    5      | T_Cid T_From T_Cid '{' Variables Methods '}' ';'
+
+    6 Variables: Variables Variable
+    7          | /* empty */
+
+    8 Variable: Initializers ':' Type ';'
+
+    9 Initializers: Initializers ',' T_Vid
+   10             | T_Vid
+
+   11 Type: T_Integer
+   12     | T_Boolean
+   13     | T_Nothing
+   14     | T_Cid
+
+   15 Methods: Methods Method
+   16        | /* empty */
+
+   17 Method: T_Mid Arguments ')' ':' RType '{' MethodBody '}' ';'
+
+   18 MethodBody: Variables Statements T_return RValue ';'
+
+   19 Arguments: Arguments ',' Parameter
+   20          | Parameter
+   21          | /* empty */
+
+   22 Parameter: T_Vid ':' Type
+
+   23 Statements: Statements Statement
+   24           | /* empty */
+
+   25 Statement: Assignment
+   26          | Print
+   27          | If
+
+   28 RValue: Expression
+   29       | /* empty */
+
+   30 RType: Type
+
+   31 Assignment: T_AssVid Expression ';'
+
+   32 Print: T_Print Expression ';'
+
+   33 If: T_If Expression T_Then Statement
+
+   34 Expression: Expression '*' Expression
+   35           | Expression '/' Expression
+   36           | Expression '+' Expression
+   37           | Expression '-' Expression
+   38           | Expression '<' Expression
+   39           | Expression T_Loet Expression
+   40           | Expression T_And Expression
+   41           | T_Not Expression
+   42           | '-' Expression
+   43           | T_Vid '.' T_Mid ExpressionList ')'
+   44           | T_Cid '.' T_Mid ExpressionList ')'
+   45           | T_Mid ExpressionList ')'
+   46           | T_Vid
+   47           | T_Int
+   48           | T_BoolT
+   49           | T_BoolF
+
+   50 ExpressionList: ExpressionList ',' Expression
+   51               | Expression
+   52               | /* empty */
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40)
+')' (41) 17 43 44 45
+'*' (42) 34
+'+' (43) 36
+',' (44) 9 19 50
+'-' (45) 37 42
+'.' (46) 43 44
+'/' (47) 35
+':' (58) 8 17 22
+';' (59) 4 5 8 17 18 31 32
+'<' (60) 38
+'{' (123) 4 5 17
+'}' (125) 4 5 17
+error (256)
+T_Int (258) 47
+T_Cid (259) 4 5 14 44
+T_Vid (260) 9 10 22 43 46
+T_AssVid (261) 31
+T_Mid (262) 17 43 44 45
+T_return (263) 18
+T_Print (264) 32
+T_If (265) 33
+T_Then (266) 33
+T_BoolT (267) 48
+T_BoolF (268) 49
+T_From (269) 5
+T_Not (270) 41
+T_And (271) 40
+T_Type (272)
+T_Nothing (273) 13
+T_Integer (274) 11
+T_Boolean (275) 12
+T_Loet (276) 39
+T_Neg (277)
+
+
+Nonterminals, with rules where they appear
+
+$accept (36)
+    on left: 0
+Start (37)
+    on left: 1, on right: 0
+Classes (38)
+    on left: 2 3, on right: 1 2
+Class (39)
+    on left: 4 5, on right: 2 3
+Variables (40)
+    on left: 6 7, on right: 4 5 6 18
+Variable (41)
+    on left: 8, on right: 6
+Initializers (42)
+    on left: 9 10, on right: 8 9
+Type (43)
+    on left: 11 12 13 14, on right: 8 22 30
+Methods (44)
+    on left: 15 16, on right: 4 5 15
+Method (45)
+    on left: 17, on right: 15
+MethodBody (46)
+    on left: 18, on right: 17
+Arguments (47)
+    on left: 19 20 21, on right: 17 19
+Parameter (48)
+    on left: 22, on right: 19 20
+Statements (49)
+    on left: 23 24, on right: 18 23
+Statement (50)
+    on left: 25 26 27, on right: 23 33
+RValue (51)
+    on left: 28 29, on right: 18
+RType (52)
+    on left: 30, on right: 17
+Assignment (53)
+    on left: 31, on right: 25
+Print (54)
+    on left: 32, on right: 26
+If (55)
+    on left: 33, on right: 27
+Expression (56)
+    on left: 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49,
+    on right: 28 31 32 33 34 35 36 37 38 39 40 41 42 50 51
+ExpressionList (57)
+    on left: 50 51 52, on right: 43 44 45 50
+
+
+state 0
+
+    0 $accept: . Start $end
+
+    T_Cid  shift, and go to state 1
+
+    Start    go to state 2
+    Classes  go to state 3
+    Class    go to state 4
+
+
+state 1
+
+    4 Class: T_Cid . '{' Variables Methods '}' ';'
+    5      | T_Cid . T_From T_Cid '{' Variables Methods '}' ';'
+
+    T_From  shift, and go to state 5
+    '{'     shift, and go to state 6
+
+
+state 2
+
+    0 $accept: Start . $end
+
+    $end  shift, and go to state 7
+
+
+state 3
+
+    1 Start: Classes .
+    2 Classes: Classes . Class
+
+    T_Cid  shift, and go to state 1
+
+    $default  reduce using rule 1 (Start)
+
+    Class  go to state 8
+
+
+state 4
+
+    3 Classes: Class .
+
+    $default  reduce using rule 3 (Classes)
+
+
+state 5
+
+    5 Class: T_Cid T_From . T_Cid '{' Variables Methods '}' ';'
+
+    T_Cid  shift, and go to state 9
+
+
+state 6
+
+    4 Class: T_Cid '{' . Variables Methods '}' ';'
+
+    $default  reduce using rule 7 (Variables)
+
+    Variables  go to state 10
+
+
+state 7
+
+    0 $accept: Start $end .
+
+    $default  accept
+
+
+state 8
+
+    2 Classes: Classes Class .
+
+    $default  reduce using rule 2 (Classes)
+
+
+state 9
+
+    5 Class: T_Cid T_From T_Cid . '{' Variables Methods '}' ';'
+
+    '{'  shift, and go to state 11
+
+
+state 10
+
+    4 Class: T_Cid '{' Variables . Methods '}' ';'
+    6 Variables: Variables . Variable
+
+    T_Vid  shift, and go to state 12
+
+    $default  reduce using rule 16 (Methods)
+
+    Variable      go to state 13
+    Initializers  go to state 14
+    Methods       go to state 15
+
+
+state 11
+
+    5 Class: T_Cid T_From T_Cid '{' . Variables Methods '}' ';'
+
+    $default  reduce using rule 7 (Variables)
+
+    Variables  go to state 16
+
+
+state 12
+
+   10 Initializers: T_Vid .
+
+    $default  reduce using rule 10 (Initializers)
+
+
+state 13
+
+    6 Variables: Variables Variable .
+
+    $default  reduce using rule 6 (Variables)
+
+
+state 14
+
+    8 Variable: Initializers . ':' Type ';'
+    9 Initializers: Initializers . ',' T_Vid
+
+    ':'  shift, and go to state 17
+    ','  shift, and go to state 18
+
+
+state 15
+
+    4 Class: T_Cid '{' Variables Methods . '}' ';'
+   15 Methods: Methods . Method
+
+    T_Mid  shift, and go to state 19
+    '}'    shift, and go to state 20
+
+    Method  go to state 21
+
+
+state 16
+
+    5 Class: T_Cid T_From T_Cid '{' Variables . Methods '}' ';'
+    6 Variables: Variables . Variable
+
+    T_Vid  shift, and go to state 12
+
+    $default  reduce using rule 16 (Methods)
+
+    Variable      go to state 13
+    Initializers  go to state 14
+    Methods       go to state 22
+
+
+state 17
+
+    8 Variable: Initializers ':' . Type ';'
+
+    T_Cid      shift, and go to state 23
+    T_Nothing  shift, and go to state 24
+    T_Integer  shift, and go to state 25
+    T_Boolean  shift, and go to state 26
+
+    Type  go to state 27
+
+
+state 18
+
+    9 Initializers: Initializers ',' . T_Vid
+
+    T_Vid  shift, and go to state 28
+
+
+state 19
+
+   17 Method: T_Mid . Arguments ')' ':' RType '{' MethodBody '}' ';'
+
+    T_Vid  shift, and go to state 29
+
+    $default  reduce using rule 21 (Arguments)
+
+    Arguments  go to state 30
+    Parameter  go to state 31
+
+
+state 20
+
+    4 Class: T_Cid '{' Variables Methods '}' . ';'
+
+    ';'  shift, and go to state 32
+
+
+state 21
+
+   15 Methods: Methods Method .
+
+    $default  reduce using rule 15 (Methods)
+
+
+state 22
+
+    5 Class: T_Cid T_From T_Cid '{' Variables Methods . '}' ';'
+   15 Methods: Methods . Method
+
+    T_Mid  shift, and go to state 19
+    '}'    shift, and go to state 33
+
+    Method  go to state 21
+
+
+state 23
+
+   14 Type: T_Cid .
+
+    $default  reduce using rule 14 (Type)
+
+
+state 24
+
+   13 Type: T_Nothing .
+
+    $default  reduce using rule 13 (Type)
+
+
+state 25
+
+   11 Type: T_Integer .
+
+    $default  reduce using rule 11 (Type)
+
+
+state 26
+
+   12 Type: T_Boolean .
+
+    $default  reduce using rule 12 (Type)
+
+
+state 27
+
+    8 Variable: Initializers ':' Type . ';'
+
+    ';'  shift, and go to state 34
+
+
+state 28
+
+    9 Initializers: Initializers ',' T_Vid .
+
+    $default  reduce using rule 9 (Initializers)
+
+
+state 29
+
+   22 Parameter: T_Vid . ':' Type
+
+    ':'  shift, and go to state 35
+
+
+state 30
+
+   17 Method: T_Mid Arguments . ')' ':' RType '{' MethodBody '}' ';'
+   19 Arguments: Arguments . ',' Parameter
+
+    ')'  shift, and go to state 36
+    ','  shift, and go to state 37
+
+
+state 31
+
+   20 Arguments: Parameter .
+
+    $default  reduce using rule 20 (Arguments)
+
+
+state 32
+
+    4 Class: T_Cid '{' Variables Methods '}' ';' .
+
+    $default  reduce using rule 4 (Class)
+
+
+state 33
+
+    5 Class: T_Cid T_From T_Cid '{' Variables Methods '}' . ';'
+
+    ';'  shift, and go to state 38
+
+
+state 34
+
+    8 Variable: Initializers ':' Type ';' .
+
+    $default  reduce using rule 8 (Variable)
+
+
+state 35
+
+   22 Parameter: T_Vid ':' . Type
+
+    T_Cid      shift, and go to state 23
+    T_Nothing  shift, and go to state 24
+    T_Integer  shift, and go to state 25
+    T_Boolean  shift, and go to state 26
+
+    Type  go to state 39
+
+
+state 36
+
+   17 Method: T_Mid Arguments ')' . ':' RType '{' MethodBody '}' ';'
+
+    ':'  shift, and go to state 40
+
+
+state 37
+
+   19 Arguments: Arguments ',' . Parameter
+
+    T_Vid  shift, and go to state 29
+
+    Parameter  go to state 41
+
+
+state 38
+
+    5 Class: T_Cid T_From T_Cid '{' Variables Methods '}' ';' .
+
+    $default  reduce using rule 5 (Class)
+
+
+state 39
+
+   22 Parameter: T_Vid ':' Type .
+
+    $default  reduce using rule 22 (Parameter)
+
+
+state 40
+
+   17 Method: T_Mid Arguments ')' ':' . RType '{' MethodBody '}' ';'
+
+    T_Cid      shift, and go to state 23
+    T_Nothing  shift, and go to state 24
+    T_Integer  shift, and go to state 25
+    T_Boolean  shift, and go to state 26
+
+    Type   go to state 42
+    RType  go to state 43
+
+
+state 41
+
+   19 Arguments: Arguments ',' Parameter .
+
+    $default  reduce using rule 19 (Arguments)
+
+
+state 42
+
+   30 RType: Type .
+
+    $default  reduce using rule 30 (RType)
+
+
+state 43
+
+   17 Method: T_Mid Arguments ')' ':' RType . '{' MethodBody '}' ';'
+
+    '{'  shift, and go to state 44
+
+
+state 44
+
+   17 Method: T_Mid Arguments ')' ':' RType '{' . MethodBody '}' ';'
+
+    $default  reduce using rule 7 (Variables)
+
+    Variables   go to state 45
+    MethodBody  go to state 46
+
+
+state 45
+
+    6 Variables: Variables . Variable
+   18 MethodBody: Variables . Statements T_return RValue ';'
+
+    T_Vid  shift, and go to state 12
+
+    $default  reduce using rule 24 (Statements)
+
+    Variable      go to state 13
+    Initializers  go to state 14
+    Statements    go to state 47
+
+
+state 46
+
+   17 Method: T_Mid Arguments ')' ':' RType '{' MethodBody . '}' ';'
+
+    '}'  shift, and go to state 48
+
+
+state 47
+
+   18 MethodBody: Variables Statements . T_return RValue ';'
+   23 Statements: Statements . Statement
+
+    T_AssVid  shift, and go to state 49
+    T_return  shift, and go to state 50
+    T_Print   shift, and go to state 51
+    T_If      shift, and go to state 52
+
+    Statement   go to state 53
+    Assignment  go to state 54
+    Print       go to state 55
+    If          go to state 56
+
+
+state 48
+
+   17 Method: T_Mid Arguments ')' ':' RType '{' MethodBody '}' . ';'
+
+    ';'  shift, and go to state 57
+
+
+state 49
+
+   31 Assignment: T_AssVid . Expression ';'
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 66
+
+
+state 50
+
+   18 MethodBody: Variables Statements T_return . RValue ';'
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    $default  reduce using rule 29 (RValue)
+
+    RValue      go to state 67
+    Expression  go to state 68
+
+
+state 51
+
+   32 Print: T_Print . Expression ';'
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 69
+
+
+state 52
+
+   33 If: T_If . Expression T_Then Statement
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 70
+
+
+state 53
+
+   23 Statements: Statements Statement .
+
+    $default  reduce using rule 23 (Statements)
+
+
+state 54
+
+   25 Statement: Assignment .
+
+    $default  reduce using rule 25 (Statement)
+
+
+state 55
+
+   26 Statement: Print .
+
+    $default  reduce using rule 26 (Statement)
+
+
+state 56
+
+   27 Statement: If .
+
+    $default  reduce using rule 27 (Statement)
+
+
+state 57
+
+   17 Method: T_Mid Arguments ')' ':' RType '{' MethodBody '}' ';' .
+
+    $default  reduce using rule 17 (Method)
+
+
+state 58
+
+   47 Expression: T_Int .
+
+    $default  reduce using rule 47 (Expression)
+
+
+state 59
+
+   44 Expression: T_Cid . '.' T_Mid ExpressionList ')'
+
+    '.'  shift, and go to state 71
+
+
+state 60
+
+   43 Expression: T_Vid . '.' T_Mid ExpressionList ')'
+   46           | T_Vid .
+
+    '.'  shift, and go to state 72
+
+    $default  reduce using rule 46 (Expression)
+
+
+state 61
+
+   45 Expression: T_Mid . ExpressionList ')'
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    $default  reduce using rule 52 (ExpressionList)
+
+    Expression      go to state 73
+    ExpressionList  go to state 74
+
+
+state 62
+
+   48 Expression: T_BoolT .
+
+    $default  reduce using rule 48 (Expression)
+
+
+state 63
+
+   49 Expression: T_BoolF .
+
+    $default  reduce using rule 49 (Expression)
+
+
+state 64
+
+   41 Expression: T_Not . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 75
+
+
+state 65
+
+   42 Expression: '-' . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 76
+
+
+state 66
+
+   31 Assignment: T_AssVid Expression . ';'
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    T_And   shift, and go to state 77
+    T_Loet  shift, and go to state 78
+    '<'     shift, and go to state 79
+    '+'     shift, and go to state 80
+    '-'     shift, and go to state 81
+    '*'     shift, and go to state 82
+    '/'     shift, and go to state 83
+    ';'     shift, and go to state 84
+
+
+state 67
+
+   18 MethodBody: Variables Statements T_return RValue . ';'
+
+    ';'  shift, and go to state 85
+
+
+state 68
+
+   28 RValue: Expression .
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    T_And   shift, and go to state 77
+    T_Loet  shift, and go to state 78
+    '<'     shift, and go to state 79
+    '+'     shift, and go to state 80
+    '-'     shift, and go to state 81
+    '*'     shift, and go to state 82
+    '/'     shift, and go to state 83
+
+    $default  reduce using rule 28 (RValue)
+
+
+state 69
+
+   32 Print: T_Print Expression . ';'
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    T_And   shift, and go to state 77
+    T_Loet  shift, and go to state 78
+    '<'     shift, and go to state 79
+    '+'     shift, and go to state 80
+    '-'     shift, and go to state 81
+    '*'     shift, and go to state 82
+    '/'     shift, and go to state 83
+    ';'     shift, and go to state 86
+
+
+state 70
+
+   33 If: T_If Expression . T_Then Statement
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    T_Then  shift, and go to state 87
+    T_And   shift, and go to state 77
+    T_Loet  shift, and go to state 78
+    '<'     shift, and go to state 79
+    '+'     shift, and go to state 80
+    '-'     shift, and go to state 81
+    '*'     shift, and go to state 82
+    '/'     shift, and go to state 83
+
+
+state 71
+
+   44 Expression: T_Cid '.' . T_Mid ExpressionList ')'
+
+    T_Mid  shift, and go to state 88
+
+
+state 72
+
+   43 Expression: T_Vid '.' . T_Mid ExpressionList ')'
+
+    T_Mid  shift, and go to state 89
+
+
+state 73
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+   51 ExpressionList: Expression .
+
+    T_And   shift, and go to state 77
+    T_Loet  shift, and go to state 78
+    '<'     shift, and go to state 79
+    '+'     shift, and go to state 80
+    '-'     shift, and go to state 81
+    '*'     shift, and go to state 82
+    '/'     shift, and go to state 83
+
+    $default  reduce using rule 51 (ExpressionList)
+
+
+state 74
+
+   45 Expression: T_Mid ExpressionList . ')'
+   50 ExpressionList: ExpressionList . ',' Expression
+
+    ')'  shift, and go to state 90
+    ','  shift, and go to state 91
+
+
+state 75
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+   41           | T_Not Expression .
+
+    $default  reduce using rule 41 (Expression)
+
+
+state 76
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+   42           | '-' Expression .
+
+    $default  reduce using rule 42 (Expression)
+
+
+state 77
+
+   40 Expression: Expression T_And . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 92
+
+
+state 78
+
+   39 Expression: Expression T_Loet . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 93
+
+
+state 79
+
+   38 Expression: Expression '<' . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 94
+
+
+state 80
+
+   36 Expression: Expression '+' . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 95
+
+
+state 81
+
+   37 Expression: Expression '-' . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 96
+
+
+state 82
+
+   34 Expression: Expression '*' . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 97
+
+
+state 83
+
+   35 Expression: Expression '/' . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 98
+
+
+state 84
+
+   31 Assignment: T_AssVid Expression ';' .
+
+    $default  reduce using rule 31 (Assignment)
+
+
+state 85
+
+   18 MethodBody: Variables Statements T_return RValue ';' .
+
+    $default  reduce using rule 18 (MethodBody)
+
+
+state 86
+
+   32 Print: T_Print Expression ';' .
+
+    $default  reduce using rule 32 (Print)
+
+
+state 87
+
+   33 If: T_If Expression T_Then . Statement
+
+    T_AssVid  shift, and go to state 49
+    T_Print   shift, and go to state 51
+    T_If      shift, and go to state 52
+
+    Statement   go to state 99
+    Assignment  go to state 54
+    Print       go to state 55
+    If          go to state 56
+
+
+state 88
+
+   44 Expression: T_Cid '.' T_Mid . ExpressionList ')'
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    $default  reduce using rule 52 (ExpressionList)
+
+    Expression      go to state 73
+    ExpressionList  go to state 100
+
+
+state 89
+
+   43 Expression: T_Vid '.' T_Mid . ExpressionList ')'
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    $default  reduce using rule 52 (ExpressionList)
+
+    Expression      go to state 73
+    ExpressionList  go to state 101
+
+
+state 90
+
+   45 Expression: T_Mid ExpressionList ')' .
+
+    $default  reduce using rule 45 (Expression)
+
+
+state 91
+
+   50 ExpressionList: ExpressionList ',' . Expression
+
+    T_Int    shift, and go to state 58
+    T_Cid    shift, and go to state 59
+    T_Vid    shift, and go to state 60
+    T_Mid    shift, and go to state 61
+    T_BoolT  shift, and go to state 62
+    T_BoolF  shift, and go to state 63
+    T_Not    shift, and go to state 64
+    '-'      shift, and go to state 65
+
+    Expression  go to state 102
+
+
+state 92
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+   40           | Expression T_And Expression .
+
+    T_Loet  shift, and go to state 78
+    '<'     shift, and go to state 79
+    '+'     shift, and go to state 80
+    '-'     shift, and go to state 81
+    '*'     shift, and go to state 82
+    '/'     shift, and go to state 83
+
+    $default  reduce using rule 40 (Expression)
+
+
+state 93
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   39           | Expression T_Loet Expression .
+   40           | Expression . T_And Expression
+
+    '+'  shift, and go to state 80
+    '-'  shift, and go to state 81
+    '*'  shift, and go to state 82
+    '/'  shift, and go to state 83
+
+    $default  reduce using rule 39 (Expression)
+
+
+state 94
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   38           | Expression '<' Expression .
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    '+'  shift, and go to state 80
+    '-'  shift, and go to state 81
+    '*'  shift, and go to state 82
+    '/'  shift, and go to state 83
+
+    $default  reduce using rule 38 (Expression)
+
+
+state 95
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   36           | Expression '+' Expression .
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    '*'  shift, and go to state 82
+    '/'  shift, and go to state 83
+
+    $default  reduce using rule 36 (Expression)
+
+
+state 96
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   37           | Expression '-' Expression .
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    '*'  shift, and go to state 82
+    '/'  shift, and go to state 83
+
+    $default  reduce using rule 37 (Expression)
+
+
+state 97
+
+   34 Expression: Expression . '*' Expression
+   34           | Expression '*' Expression .
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    $default  reduce using rule 34 (Expression)
+
+
+state 98
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   35           | Expression '/' Expression .
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+
+    $default  reduce using rule 35 (Expression)
+
+
+state 99
+
+   33 If: T_If Expression T_Then Statement .
+
+    $default  reduce using rule 33 (If)
+
+
+state 100
+
+   44 Expression: T_Cid '.' T_Mid ExpressionList . ')'
+   50 ExpressionList: ExpressionList . ',' Expression
+
+    ')'  shift, and go to state 103
+    ','  shift, and go to state 91
+
+
+state 101
+
+   43 Expression: T_Vid '.' T_Mid ExpressionList . ')'
+   50 ExpressionList: ExpressionList . ',' Expression
+
+    ')'  shift, and go to state 104
+    ','  shift, and go to state 91
+
+
+state 102
+
+   34 Expression: Expression . '*' Expression
+   35           | Expression . '/' Expression
+   36           | Expression . '+' Expression
+   37           | Expression . '-' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_Loet Expression
+   40           | Expression . T_And Expression
+   50 ExpressionList: ExpressionList ',' Expression .
+
+    T_And   shift, and go to state 77
+    T_Loet  shift, and go to state 78
+    '<'     shift, and go to state 79
+    '+'     shift, and go to state 80
+    '-'     shift, and go to state 81
+    '*'     shift, and go to state 82
+    '/'     shift, and go to state 83
+
+    $default  reduce using rule 50 (ExpressionList)
+
+
+state 103
+
+   44 Expression: T_Cid '.' T_Mid ExpressionList ')' .
+
+    $default  reduce using rule 44 (Expression)
+
+
+state 104
+
+   43 Expression: T_Vid '.' T_Mid ExpressionList ')' .
+
+    $default  reduce using rule 43 (Expression)

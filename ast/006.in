@@ -1,0 +1,32 @@
+Fruit
+{
+	var4 : Bool;
+	var5 : Int;
+
+	sell(var1:Int,var2:Int,flag:Bool) : Int
+	{
+		var9 = 512;
+		var5 = 1024;
+		print var5/var1;
+		var2 = var5/var1;
+		var2 = var5*var1;
+		var2 = var5+var1;
+		var2 = var5-var1;
+		var4 = var5 < var1;
+		var4 = var5 <= var1;
+		if not flag then var2=-12345;	
+		return var2;
+	};
+};
+
+Program 
+{
+	start() : Nothing
+	{	
+		apple : Fruit;
+		temp : Int;
+		temp = apple.grow();
+		print apple.sell(88,99,true);
+		return;
+	};
+};
